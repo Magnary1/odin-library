@@ -36,9 +36,13 @@ function addBookToLibrary() {
 
 
 
+
     // ADDS BOOK TO THE LAST ROW OF TABLE
     const tableRow = document.createElement(`tr`)
     for (let x in myLibrary.at(-1)) {
+        if (tableRow.dataset.currentIndex == undefined) {
+            tableRow.dataset.currentIndex = myLibrary.indexOf(newBook)
+        }
         const tableData = document.createElement(`td`)
         tableData.textContent = myLibrary.at(-1)[x]
         tableRow.append(tableData)
@@ -55,6 +59,9 @@ function addBookToLibrary() {
     tableRow.append(tableDelete)
     let deleteButtons = document.querySelectorAll(`.delete-button`)
     deleteButtons.forEach(button => button.addEventListener(`click`, deleteBook))
+
+
+    // newBook.currentIndex = myLibrary.lastIndexOf()
 }
 
 
@@ -65,7 +72,24 @@ function addBookToLibrary() {
 
 
 function deleteBook(e) {
+    let bookPosition = e.target.parentElement.parentElement.dataset.currentIndex
+    myLibrary.splice(bookPosition, 1)
     e.target.parentElement.parentElement.remove()
+    let tableRow = document.querySelectorAll(`tr`)
+    let pos = 0
+    
+    for (i = 1 ; i<myLibrary.length+1; i++) {
+    tableRow[i].dataset.currentIndex = i-1
+    }
+    // tableRow.forEach((row, index) => 
+    // let  = row
+
+    
+    // // if (row.dataset.currentIndex === "ignore") {
+    // //     continue
+    // // }
+    // // row.dataset.currentIndex = pos++
+    // )
 }
 
 function firstAttemptOfAddingTable() {
@@ -101,13 +125,13 @@ function firstAttemptOfAddingTable() {
 function addWholeLibrary() {
         // ADDS WHOLE LIBRARY ARRAY TO TABLE
         for (let x in myLibrary) {
-            const tableRow = document.createElement(`tr`)
-            for (let y in myLibrary[x]) {
-                const tableData = document.createElement(`td`)
-                tableData.textContent = myLibrary[x][y]
-                tableRow.append(tableData)
+            const tableRow = document.createElement(`tr`)            //creates each row of the library
+            for (let y in myLibrary[x]) {                            // gets each property of each item
+                const tableData = document.createElement(`td`)       // creates each box
+                tableData.textContent = myLibrary[x][y]              // adds property text
+                tableRow.append(tableData)                           // adds box to the row
             }
-            table.append(tableRow)
+            table.append(tableRow)                                   // adds the row to the table
         }
     
 }
