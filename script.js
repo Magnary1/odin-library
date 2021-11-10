@@ -7,12 +7,9 @@ const submitInput = document.getElementById(`submit-input`)
 let deleteButtons = document.querySelectorAll(`.delete-button`)
 deleteButtons.forEach(button => button.addEventListener(`click`, deleteBook))
 
-
 const table = document.querySelector(`table`)
 
 submitInput.addEventListener(`click`, addBookToLibrary)
-
-console.log(inputRead.ch)
 
 let myLibrary = []
 
@@ -33,24 +30,33 @@ function addBookToLibrary() {
     )
     myLibrary.push(newBook)
 
-
-
-
-
     // ADDS BOOK TO THE LAST ROW OF TABLE
     const tableRow = document.createElement(`tr`)
-    for (let x in myLibrary.at(-1)) {
+    for (let x in myLibrary.at(-1)) {   // selects last item of myLibrary array
         if (tableRow.dataset.currentIndex == undefined) {
             tableRow.dataset.currentIndex = myLibrary.indexOf(newBook)
         }
         const tableData = document.createElement(`td`)
-        tableData.textContent = myLibrary.at(-1)[x]
+
+        if (myLibrary.at(-1)[x] === true) {                                // creates checkmark in table
+            let readCheckBox = document.createElement(`input`)
+            readCheckBox.type = "checkbox"
+            readCheckBox.checked = true
+            readCheckBox.classList.add(`readCheckmarks`)
+            tableData.append(readCheckBox)
+        } else if (myLibrary.at(-1)[x] === false) {
+            let readCheckBox = document.createElement(`input`)
+            readCheckBox.type = "checkbox"
+            readCheckBox.checked = false
+            readCheckBox.classList.add(`readCheckmarks`)
+            tableData.append(readCheckBox)
+        } else tableData.textContent = myLibrary.at(-1)[x]
+
         tableRow.append(tableData)
     }
     table.append(tableRow)
 
-
-
+    // CREATES DELETE BUTTON
     let tableDelete = document.createElement(`td`)
     let deleteButton = document.createElement(`button`)
     deleteButton.textContent = `X`
@@ -60,16 +66,9 @@ function addBookToLibrary() {
     let deleteButtons = document.querySelectorAll(`.delete-button`)
     deleteButtons.forEach(button => button.addEventListener(`click`, deleteBook))
 
-
-    // newBook.currentIndex = myLibrary.lastIndexOf()
+    checkIfRead()
+    deleteTextContent()
 }
-
-
-
-
-
-
-
 
 function deleteBook(e) {
     let bookPosition = e.target.parentElement.parentElement.dataset.currentIndex
@@ -77,61 +76,70 @@ function deleteBook(e) {
     e.target.parentElement.parentElement.remove()
     let tableRow = document.querySelectorAll(`tr`)
     let pos = 0
-    
-    for (i = 1 ; i<myLibrary.length+1; i++) {
-    tableRow[i].dataset.currentIndex = i-1
-    }
-    // tableRow.forEach((row, index) => 
-    // let  = row
 
-    
-    // // if (row.dataset.currentIndex === "ignore") {
-    // //     continue
-    // // }
-    // // row.dataset.currentIndex = pos++
-    // )
+    for (i = 1; i < myLibrary.length + 1; i++) {
+        tableRow[i].dataset.currentIndex = i - 1
+    }
+}
+
+function checkIfRead() {
+    const readCheckmarks = document.querySelectorAll(`.readCheckmarks`)
+    readCheckmarks.forEach(checkmark => checkmark.addEventListener(`click`, changeReadStatus))
+}
+
+function changeReadStatus(e) {
+    let bookPosition = e.target.parentElement.parentElement.dataset.currentIndex
+    if (myLibrary[bookPosition].read === true) {
+        myLibrary[bookPosition].read = false
+    } else myLibrary[bookPosition].read = true
+}
+
+function deleteTextContent() {
+    inputTitle.value = ``
+    inputAuthor.value = ``
+    inputPages.value = ``
+    inputRead.checked = false
 }
 
 function firstAttemptOfAddingTable() {
-        //MANUALLY GOES THROUGH EACH INPUT AND ADDS TO TABLE
+    //MANUALLY GOES THROUGH EACH INPUT AND ADDS TO TABLE
 
-        let tableRow = document.createElement(`tr`)
-        let tableTitle = document.createElement(`td`)
-        let tableAuthor = document.createElement(`td`)
-        let tablePages = document.createElement(`td`)
-        let tableRead = document.createElement(`td`)
-        let tableDelete = document.createElement(`td`)
-        let deleteButton = document.createElement(`button`)
-    
-        tableTitle.textContent = myLibrary.at(-1).title
-        tableAuthor.textContent = myLibrary.at(-1).author
-        tablePages.textContent = myLibrary.at(-1).pages
-        tableRead.textContent = myLibrary.at(-1).read
-    
-    
-    
-        deleteButton.textContent = `X`
-        deleteButton.classList.add(`delete-button`)
-        tableDelete.append(deleteButton)
-    
-        tableRow.append(tableTitle)
-        tableRow.append(tableAuthor)
-        tableRow.append(tablePages)
-        tableRow.append(tableRead)
-        tableRow.append(tableDelete)
-        table.append(tableRow)
+    let tableRow = document.createElement(`tr`)
+    let tableTitle = document.createElement(`td`)
+    let tableAuthor = document.createElement(`td`)
+    let tablePages = document.createElement(`td`)
+    let tableRead = document.createElement(`td`)
+    let tableDelete = document.createElement(`td`)
+    let deleteButton = document.createElement(`button`)
+
+    tableTitle.textContent = myLibrary.at(-1).title
+    tableAuthor.textContent = myLibrary.at(-1).author
+    tablePages.textContent = myLibrary.at(-1).pages
+    tableRead.textContent = myLibrary.at(-1).read
+
+
+
+    deleteButton.textContent = `X`
+    deleteButton.classList.add(`delete-button`)
+    tableDelete.append(deleteButton)
+
+    tableRow.append(tableTitle)
+    tableRow.append(tableAuthor)
+    tableRow.append(tablePages)
+    tableRow.append(tableRead)
+    tableRow.append(tableDelete)
+    table.append(tableRow)
 }
-
 function addWholeLibrary() {
-        // ADDS WHOLE LIBRARY ARRAY TO TABLE
-        for (let x in myLibrary) {
-            const tableRow = document.createElement(`tr`)            //creates each row of the library
-            for (let y in myLibrary[x]) {                            // gets each property of each item
-                const tableData = document.createElement(`td`)       // creates each box
-                tableData.textContent = myLibrary[x][y]              // adds property text
-                tableRow.append(tableData)                           // adds box to the row
-            }
-            table.append(tableRow)                                   // adds the row to the table
+    // ADDS WHOLE LIBRARY ARRAY TO TABLE
+    for (let x in myLibrary) {
+        const tableRow = document.createElement(`tr`)            //creates each row of the library
+        for (let y in myLibrary[x]) {                            // gets each property of each item
+            const tableData = document.createElement(`td`)       // creates each box
+            tableData.textContent = myLibrary[x][y]              // adds property text
+            tableRow.append(tableData)                           // adds box to the row
         }
-    
+        table.append(tableRow)                                   // adds the row to the table
+    }
+
 }
