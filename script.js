@@ -20,61 +20,54 @@ function Book(title, author, pages, read) {
     this.read = read
 }
 
-async function addBookToLibrary() {
+function addBookToLibrary() {
     event.preventDefault()
-    fetch('http://localhost:5000/artists')
-    .then(res => res.json())
-    .then(res => {
-        let name = res[0].name;
-        console.log( name);
-        
-        let newBook = new Book(
-            name,
-            inputAuthor.value,
-            inputPages.value,
-            inputRead.checked,
-            )
-            myLibrary.push(newBook)
+    let newBook = new Book(
+        inputTitle.value,
+        inputAuthor.value,
+        inputPages.value,
+        inputRead.checked,
+    )
+    myLibrary.push(newBook)
 
-            // ADDS BOOK TO THE LAST ROW OF TABLE
-            const tableRow = document.createElement(`tr`)
-            for (let x in myLibrary.at(-1)) {   // selects last item of myLibrary array
-                if (tableRow.dataset.currentIndex == undefined) {
-                    tableRow.dataset.currentIndex = myLibrary.indexOf(newBook)
-                }
-                const tableData = document.createElement(`td`)
-                
-                if (myLibrary.at(-1)[x] === true) {                                // creates checkmark in table
-                    let readCheckBox = document.createElement(`input`)
-                    readCheckBox.type = "checkbox"
-                    readCheckBox.checked = true
-                    readCheckBox.classList.add(`readCheckmarks`)
-                    tableData.append(readCheckBox)
-                } else if (myLibrary.at(-1)[x] === false) {
-                    let readCheckBox = document.createElement(`input`)
-                    readCheckBox.type = "checkbox"
-                    readCheckBox.checked = false
-                    readCheckBox.classList.add(`readCheckmarks`)
-                    tableData.append(readCheckBox)
-                } else tableData.textContent = myLibrary.at(-1)[x]
-                
-                tableRow.append(tableData)
-            }
-            table.append(tableRow)
-            
-            // CREATES DELETE BUTTON
-            let tableDelete = document.createElement(`td`)
-            let deleteButton = document.createElement(`button`)
-            deleteButton.textContent = `X`
+    // ADDS BOOK TO THE LAST ROW OF TABLE
+    const tableRow = document.createElement(`tr`)
+    for (let x in myLibrary.at(-1)) {   // selects last item of myLibrary array
+        if (tableRow.dataset.currentIndex == undefined) {
+            tableRow.dataset.currentIndex = myLibrary.indexOf(newBook)
+        }
+        const tableData = document.createElement(`td`)
+
+        if (myLibrary.at(-1)[x] === true) {                                // creates checkmark in table
+            let readCheckBox = document.createElement(`input`)
+            readCheckBox.type = "checkbox"
+            readCheckBox.checked = true
+            readCheckBox.classList.add(`readCheckmarks`)
+            tableData.append(readCheckBox)
+        } else if (myLibrary.at(-1)[x] === false) {
+            let readCheckBox = document.createElement(`input`)
+            readCheckBox.type = "checkbox"
+            readCheckBox.checked = false
+            readCheckBox.classList.add(`readCheckmarks`)
+            tableData.append(readCheckBox)
+        } else tableData.textContent = myLibrary.at(-1)[x]
+
+        tableRow.append(tableData)
+    }
+    table.append(tableRow)
+
+    // CREATES DELETE BUTTON
+    let tableDelete = document.createElement(`td`)
+    let deleteButton = document.createElement(`button`)
+    deleteButton.textContent = `X`
     deleteButton.classList.add(`delete-button`)
     tableDelete.append(deleteButton)
     tableRow.append(tableDelete)
     let deleteButtons = document.querySelectorAll(`.delete-button`)
     deleteButtons.forEach(button => button.addEventListener(`click`, deleteBook))
-    
+
     checkIfRead()
     deleteTextContent()
-})
 }
 
 function deleteBook(e) {
